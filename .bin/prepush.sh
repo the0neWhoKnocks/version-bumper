@@ -54,15 +54,19 @@ if [[ "$bump" != "" ]]; then
   npm version --no-git-tag-version $bump
   handleError $? "Couldn't bump version number."
 
+  echo;
   echo "[ COMPILE ] code ========================="
+  echo;
   npm run compile
   handleError $? "Couldn't compile with new version."
 
+  echo;
   echo "[ COMMIT ] bumped version ================"
+  echo;
   git add -u
   handleError $? "Couldn't add new files"
   git commit -m "Bumped version to $newVersion"
   handleError $? "Couldn't commit new files"
-  git push -f --no-verify
+  git push --no-verify
   handleError $? "Couldn't push up commit with bumped version"
 fi
