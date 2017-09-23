@@ -10,3 +10,5 @@ automate bumping versions via a `pre-push` git hook.
 ```sh
 npm i
 ```
+
+test
