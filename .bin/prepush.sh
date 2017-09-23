@@ -69,5 +69,5 @@ if [[ "$bump" != "" ]]; then
   handleError $? "Couldn't commit new files"
 
   # run a second push with no hooks in the background so that the new commit gets pushed up.
-  nohup sleep 3 && git push --no-verify &>/dev/null &
+  nohup sleep 1 && git push --no-verify &>/dev/null &
 fi
