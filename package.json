@@ -20,5 +20,5 @@
     "prepush": "bash ./.bin/prepush.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "3.0.1"
+  "version": "3.0.2"
 }
