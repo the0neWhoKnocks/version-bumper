@@ -63,6 +63,6 @@ if [[ "$bump" != "" ]]; then
   handleError $? "Couldn't add new files"
   git commit -m "Bumped version to $newVersion"
   handleError $? "Couldn't commit new files"
-  git push --no-verify
+  git push -f --no-verify
   handleError $? "Couldn't push up commit with bumped version"
 fi
