@@ -67,6 +67,7 @@ if [[ "$bump" != "" ]]; then
   handleError $? "Couldn't add new files"
   git commit -m "Bumped version to $newVersion"
   handleError $? "Couldn't commit new files"
-  git push --no-verify
-  handleError $? "Couldn't push up commit with bumped version"
+
+  # run a second push with no hooks in the background so that the new commit gets pushed up.
+  nohup git push --no-verify &
 fi
