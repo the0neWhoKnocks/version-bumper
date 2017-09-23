@@ -11,4 +11,4 @@ automate bumping versions via a `pre-push` git hook.
 npm i
 ```
 
-test1
+test2
