@@ -1,0 +1,24 @@
+{
+  "author": "",
+  "description": "Demonstrates how to bump versions using git-hooks",
+  "devDependencies": {
+    "husky": "0.14.3",
+    "string-replace-loader": "1.3.0",
+    "webpack": "3.6.0"
+  },
+  "engines": {
+    "node": ">=6.11.0"
+  },
+  "engine-strict": true,
+  "license": "ISC",
+  "main": "index.js",
+  "name": "version-bumper",
+  "scripts": {
+    "compile": "webpack --progress --colors --config ./conf.webpack.js",
+    "husky:install": "node ./node_modules/husky/bin/install",
+    "husky:uninstall": "node ./node_modules/husky/bin/uninstall",
+    "prepush": "bash ./.bin/prepush.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
