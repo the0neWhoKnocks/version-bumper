@@ -13,7 +13,7 @@ echo "[ BUMP ] versions ========================"
 # get current version number
 VERSION=$(node -pe "require('./package.json').version")
 REPO_URL=$(git config --get remote.origin.url)
-REPO_URL=$(node -p "'$REPO_URL'.replace(/^git@/,'https://').replace(/\.git$/,'')")
+REPO_URL=$(node -p "'$REPO_URL'.replace(/^git@/,'https://').replace('.com:','.com/').replace(/\.git$/,'')")
 
 # build out what the version would be based on what the user chooses
 MAJOR=$(node -p "var nums='$VERSION'.split('.'); nums[0]=+nums[0]+1; nums[1]=0; nums[2]=0; nums.join('.')")
@@ -56,7 +56,7 @@ if [[ "$bump" != "" ]]; then
   # get previous tag info so that the changelog can be updated.
   if [[ $(git tag -l) != "" ]]; then
     latestTag=$(git tag -l | tail -n1)
-    echo "Latest tag: $latestTag"
+    #echo "Latest tag: $latestTag"
   fi
 
   # get a list of changes between tags
@@ -65,8 +65,8 @@ if [[ "$bump" != "" ]]; then
     newContent=""
     touch "$filename"
 
-    #git log "$latestTag"..HEAD --oneline
-    changes=$(git log "v3.1.0".."v4.0.0" --oneline)
+    #changes=$(git log "v3.1.0".."v4.0.0" --oneline)
+    changes=$(git log "$latestTag"..HEAD --oneline)
     formattedChanges=""
     while read -r line; do
       if [[ "$formattedChanges" != "" ]]; then
@@ -87,7 +87,7 @@ if [[ "$bump" != "" ]]; then
 
     # add changes to top of logs
     if [[ "$newContent" != "" ]]; then
-      echo $'\n'"---"$'\n\n'"## $newVersion"$'\n'"$newContent"$(cat "$filename") > "$filename"
+      echo $'\n'"## $newVersion"$'\n'"$newContent"$'\n'"$(cat "$filename")" > "$filename"
     fi
   fi
 
