@@ -12,3 +12,18 @@ automate bumping versions via a `pre-push` git hook.
 ```sh
 npm i
 ```
+
+---
+
+## Notes
+
+- If you're testing this in a repo that hasn't been wired up to a `git` repo yet,
+  you'll need to have `--no-git-tag-version` in the `prepush.sh` file so that it
+  doesn't try to add a `git tag`. So it should look like:
+  ```sh
+  npm version --no-git-tag-version $bump
+  ```
+- If you're working on a large project (with multiple contributors) you'd rename
+  the `prepush` script to `prepublishOnly` in `package.json`. This way devs can
+  go through the PR process and a manual publish can occur once the code's been
+  merged in.

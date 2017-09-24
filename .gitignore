@@ -1,6 +1,10 @@
 # Logs
 *.log
 npm-debug.log*
+nohup.out
 
 # directories
 node_modules
+
+# files
+*.gif

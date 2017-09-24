@@ -12,11 +12,13 @@ function handleError {
 echo "[ BUMP ] versions ========================"
 # get current version number
 VERSION=$(node -pe "require('./package.json').version")
+REPO_URL=$(git config --get remote.origin.url)
+REPO_URL=$(node -p "'$REPO_URL'.replace(/^git@/,'https://').replace(/\.git$/,'')")
 
 # build out what the version would be based on what the user chooses
-MAJOR=$(node -pe "var nums = '$VERSION'.split('.'); nums[0]=+nums[0]+1; nums[1]=0; nums[2]=0; nums.join('.')")
-MINOR=$(node -pe "var nums = '$VERSION'.split('.'); nums[1]=+nums[1]+1; nums[2]=0; nums.join('.')")
-PATCH=$(node -pe "var nums = '$VERSION'.split('.'); nums[2]=+nums[2]+1; nums.join('.')")
+MAJOR=$(node -p "var nums='$VERSION'.split('.'); nums[0]=+nums[0]+1; nums[1]=0; nums[2]=0; nums.join('.')")
+MINOR=$(node -p "var nums='$VERSION'.split('.'); nums[1]=+nums[1]+1; nums[2]=0; nums.join('.')")
+PATCH=$(node -p "var nums='$VERSION'.split('.'); nums[2]=+nums[2]+1; nums.join('.')")
 
 # Allows for reading input below during actual git call - assigns stdin to keyboard
 exec < /dev/tty
@@ -51,7 +53,45 @@ exec <&-
 
 echo;
 if [[ "$bump" != "" ]]; then
-  npm version --no-git-tag-version $bump
+  # get previous tag info so that the changelog can be updated.
+  if [[ $(git tag -l) != "" ]]; then
+    latestTag=$(git tag -l | tail -n1)
+    echo "Latest tag: $latestTag"
+  fi
+
+  # get a list of changes between tags
+  if [[ "$latestTag" != "" ]]; then
+    filename="./CHANGELOG.md"
+    newContent=""
+    touch "$filename"
+
+    #git log "$latestTag"..HEAD --oneline
+    changes=$(git log "v3.1.0".."v4.0.0" --oneline)
+    formattedChanges=""
+    while read -r line; do
+      if [[ "$formattedChanges" != "" ]]; then
+        formattedChanges="$formattedChanges,'$line'"
+      else
+        formattedChanges="'$line'"
+      fi
+    done < <(echo -e "$changes")
+    formattedChanges="[$formattedChanges]"
+
+    newContent=$(node -pe "
+      let changes = $formattedChanges;
+      for(let i=0; i<changes.length; i++){
+        changes[i] = changes[i].replace(/^([a-z0-9]+)\s/i, \"- [\$1]($REPO_URL/commit/\$1) \");
+      }
+      changes.join('\n');
+    ")
+
+    # add changes to top of logs
+    if [[ "$newContent" != "" ]]; then
+      echo $'\n'"---"$'\n\n'"## $newVersion"$'\n'"$newContent"$(cat "$filename") > "$filename"
+    fi
+  fi
+
+  npm version $bump
   handleError $? "Couldn't bump version number."
 
   echo;
@@ -65,7 +105,7 @@ if [[ "$bump" != "" ]]; then
   echo;
   git add -u
   handleError $? "Couldn't add new files"
-  git commit -m "Bumped version to $newVersion"
+  git commit -m "v$newVersion"$'\n\n'"Bumped version to v$newVersion."
   handleError $? "Couldn't commit new files"
 
   # run a second push with no hooks in the background so that the new commit gets pushed up.
