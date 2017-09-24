@@ -105,11 +105,11 @@ if [[ "$bump" != "" ]]; then
   echo;
   git add -u
   handleError $? "Couldn't add new files"
-  git commit -m "v$newVersion"$'\n\n'"Bumped version to v$newVersion."
+  git commit -m "v$newVersion"$'\n\n'"$changes"
   handleError $? "Couldn't commit new files"
   git tag -a "v$newVersion" -m "v$newVersion"$'\n\n'"$changes"
   handleError $? "Couldn't create tag for new version"
 
   # run a second push with no hooks in the background so that the new commit gets pushed up.
-  nohup sleep 1 && git push --no-verify &>/dev/null &
+  nohup sleep 1 && git push --no-verify --follow-tags &>/dev/null &
 fi
