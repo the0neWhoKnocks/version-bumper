@@ -78,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 module.exports = {
-  version: '4.0.1',
+  version: '4.0.2',
 };
 
 

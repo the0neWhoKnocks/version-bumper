@@ -1,4 +1,7 @@
 
+## 4.0.2
+- [c756b14](https://github.com/the0neWhoKnocks/version-bumper/commit/c756b14) Push tags up with branch changes
+
 ## 4.0.1
 - [b19b541](https://github.com/the0neWhoKnocks/version-bumper/commit/b19b541) Updated script to account for formatting
 - [852baef](https://github.com/the0neWhoKnocks/version-bumper/commit/852baef) Script updates to account for 'npm version'
